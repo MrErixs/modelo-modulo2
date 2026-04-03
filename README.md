@@ -46,9 +46,9 @@ Por ello se construyó la etiqueta:
 
 5. Limpieza del texto 
    Se aplicaron transformaciones básicas al texto:
-   - conversión a minúsculas,
-   - corrección de entidades HTML,
-   - normalización de espacios en blanco.
+   - conversión a minúsculas
+   - corrección de entidades HTML
+   - normalización de espacios en blanco
 
 6. Eliminación de duplicados
    Se eliminaron registros repetidos para reducir ruido en el dataset.
@@ -66,6 +66,9 @@ Como resultado de esta etapa se generaron los siguientes archivos:
 - `train.csv`: conjunto de entrenamiento
 - `test.csv`: conjunto de prueba
 - `preprocess.py`: código utilizado para el preprocesamiento
+
+## NOTAS IMPORTANTES
+Al analizar la distribución de la variable objetivo, se observó un fuerte desbalance entre clases. Aproximadamente el 96.72% de las instancias corresponden a reseñas positivas y solo el 3.28% a reseñas negativas. Esta característica deberá considerarse en etapas posteriores del modelado y evaluación.
 
 ## Siguiente paso
 En la siguiente etapa del proyecto se realizará la transformación del texto a representaciones numéricas adecuadas para el modelo, así como la implementación y entrenamiento de un modelo de clasificación utilizando un framework de aprendizaje profundo.

@@ -47,3 +47,13 @@ train_df, test_df = train_test_split(
 df.to_csv("data/processed/reviews_binary_clean.csv", index = False)
 train_df.to_csv("data/processed/train.csv", index = False)
 test_df.to_csv("data/processed/test.csv", index = False)
+
+# Revision de conteos, para saber la cantidad cuantos comentarios tienen x estrellas
+print("Conteo de stars:")
+print(df["stars"].value_counts())
+
+print("\nConteo de label:")
+print(df["label"].value_counts())
+
+print("\nProporción de label:")
+print(df["label"].value_counts(normalize=True))
