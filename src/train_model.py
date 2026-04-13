@@ -30,20 +30,20 @@ tokenizer = Tokenizer(num_words=vocab_size, oov_token=oov_token)
 tokenizer.fit_on_texts(x_train_text)
 
 # Convierto el texto en una secuencia numerica
-x_train_seq = tokenizer.texts_to_sequences("x_train_text")
-x_test_seq = tokenizer.texts_to_sequences("x_test_text")
+x_train_seq = tokenizer.texts_to_sequences(x_train_text)
+x_test_seq = tokenizer.texts_to_sequences(x_test_text)
 
 # Padding
 x_train_pad = pad_sequences(
     x_train_seq,
-    max=max_length,
+    maxlen=max_length,
     padding="post",
     truncating="post"
 )
 
 x_test_pad = pad_sequences(
     x_test_seq,
-    max=max_length,
+    maxlen=max_length,
     padding="post",
     truncating="post"
 )
@@ -58,7 +58,7 @@ model = Sequential([
 
 # Compilo el modelo
 model.compile(
-    optimazer="adam",
+    optimizer="adam",
     loss="binary_crossentropy",
     metrics=["accuracy"]
 )
@@ -81,7 +81,7 @@ print(f"Loss: {loss:.4f}")
 print(f"Accuract: {accuracy:.4}")
 
 # Ahora hago la prediccion
-y_pred_prob = model.predict("x_test_pad")
+y_pred_prob = model.predict(x_test_pad)
 y_pred = (y_pred_prob >= 0.5).astype(int).flatten()
 
 print("\nMatriz de confusion:")
