@@ -1,0 +1,95 @@
+import pandas as pd
+import numpy as np
+import tensorflow as tf
+
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Embedding, GlobalAveragePooling1D, Dense
+from sklearn.metrics import classification_report, confusion_matrix
+
+# Cargo los datos
+train_df = pd.read_csv("data/processed/train.csv")
+test_df = pd.read_csv("data/processed/test.csv")
+
+# Tomo el texto y las etiquetas
+x_train_text = train_df["text"].astype(str).tolist()
+y_train = train_df["label"].values
+
+x_test_text = test_df["text"].astype(str).tolist()
+y_test = test_df["label"].values
+
+# Tokenizacion
+# num_words es el tamaño maximo del vocabulario
+
+vocab_size = 10000
+max_length = 100
+oov_token = "<OOV"
+
+tokenizer = Tokenizer(num_words=vocab_size, oov_token=oov_token)
+tokenizer.fit_on_texts(x_train_text)
+
+# Convierto el texto en una secuencia numerica
+x_train_seq = tokenizer.texts_to_sequences("x_train_text")
+x_test_seq = tokenizer.texts_to_sequences("x_test_text")
+
+# Padding
+x_train_pad = pad_sequences(
+    x_train_seq,
+    max=max_length,
+    padding="post",
+    truncating="post"
+)
+
+x_test_pad = pad_sequences(
+    x_test_seq,
+    max=max_length,
+    padding="post",
+    truncating="post"
+)
+
+# Creo el modelo
+model = Sequential([
+    Embedding(input_dim=vocab_size, output_dim=16, input_length=max_length),
+    GlobalAveragePooling1D(),
+    Dense(24, activation="relu"),
+    Dense(1, activation="sigmoid")
+])
+
+# Compilo el modelo
+model.compile(
+    optimazer="adam",
+    loss="binary_crossentropy",
+    metrics=["accuracy"]
+)
+
+# Entreno el modelo
+history = model.fit(
+    x_train_pad,
+    y_train,
+    epochs=5,
+    batch_size=32,
+    validation_split=0.2,
+    verbose=1
+)
+
+# Evaluo el modelo
+loss, accuracy = model.evaluate(x_test_pad, y_test, verbose=1)
+
+print("\nResultados en test:")
+print(f"Loss: {loss:.4f}")
+print(f"Accuract: {accuracy:.4}")
+
+# Ahora hago la prediccion
+y_pred_prob = model.predict("x_test_pad")
+y_pred = (y_pred_prob >= 0.5).astype(int).flatten()
+
+print("\nMatriz de confusion:")
+print(confusion_matrix(y_test, y_pred))
+
+print("\nReporte de clasificación:")
+print(classification_report(y_test, y_pred, digits=4))
+
+# Guardo modelo
+model.save("sentiment_model.keras")
+print("\nModelo guardado como sentiment_model.keras")

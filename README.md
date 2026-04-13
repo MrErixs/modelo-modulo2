@@ -72,3 +72,9 @@ Al analizar la distribución de la variable objetivo, se observó un fuerte desb
 
 ## Siguiente paso
 En la siguiente etapa del proyecto se realizará la transformación del texto a representaciones numéricas adecuadas para el modelo, así como la implementación y entrenamiento de un modelo de clasificación utilizando un framework de aprendizaje profundo.
+
+# Segundo avance - Implementar el modelo usando un framework seleccionado.
+
+## Objetivo
+Desarrollar una primera implementación funcional de un modelo de clasificación de reseñas positivas y negativas, utilizando un framework de aprendizaje automático. En esta etapa se busca partir de los datos previamente preprocesados, convertir el texto a una representación numérica adecuada para el modelo y realizar un entrenamiento inicial que permita evaluar de manera preliminar su desempeño.
+
