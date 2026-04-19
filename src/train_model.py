@@ -39,7 +39,8 @@ classes = np.unique(y_train)
 weights = compute_class_weight(class_weight="balanced", classes=classes, y=y_train)
 class_weight = dict(zip(classes, weights))
 
-print(class_weight)
+# Pruebo que si esta funcionando la generacion de pesos
+print("GENERACION DE PESOS", class_weight)
 
 # Padding
 x_train_pad = pad_sequences(
@@ -58,7 +59,7 @@ x_test_pad = pad_sequences(
 
 # Creo el modelo
 model = Sequential([
-    Embedding(input_dim=vocab_size, output_dim=16, input_length=max_length),
+    Embedding(input_dim=vocab_size, output_dim=24),
     GlobalAveragePooling1D(),
     Dense(24, activation="relu"),
     Dense(1, activation="sigmoid")
@@ -75,7 +76,7 @@ model.compile(
 history = model.fit(
     x_train_pad,
     y_train,
-    epochs=5,
+    epochs=15,
     batch_size=32,
     validation_split=0.2,
     class_weight=class_weight,
@@ -90,11 +91,11 @@ print(f"Loss: {loss:.4f}")
 print(f"Accuracy: {accuracy:.4}")
 
 # Ahora hago la prediccion
-y_pred = (model.predict(x_test_pad) > 0.5).astype("int32")
+y_pred = (model.predict(x_test_pad) > 0.5).astype("int32").flatten()
 
 print(confusion_matrix(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 
 # Guardo modelo
-model.save("sentiment_model_2.keras")
-print("\nModelo guardado como sentiment_model_2.keras")
+model.save("sentiment_model_3.keras")
+print("\nModelo guardado como sentiment_model_3.keras")

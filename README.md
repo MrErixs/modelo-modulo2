@@ -1,7 +1,8 @@
-# Primer avance - Clasificación de reseñas de recetas
+# Clasificación de reseñas de recetas
 
 ## Objetivo
-El objetivo de este proyecto es construir un sistema de clasificación de texto. En esta primera etapa se realizó la selección del dataset, el preprocesamiento de los datos y la separación en conjuntos de entrenamiento y prueba, como base para el entrenamiento posterior de un modelo de aprendizaje.
+El objetivo de este proyecto es construir un modelo de clasificación de texto capaz de identificar si una reseña de receta es positiva o negativa a partir de su contenido textual.
+
 
 ## Dataset seleccionado
 Se seleccionó el dataset **Recipe Reviews and User Feedback**, el cual contiene comentarios textuales de usuarios sobre recetas junto con información adicional como número de estrellas, votos y reputación del usuario.
@@ -15,17 +16,21 @@ En un contexto real, este tipo de modelo podría utilizarse para analizar autom�
 
 ## Variables utilizadas
 Se utilizaron las siguientes columnas:
-- "text": es el comentario textual del usuario. Esta columna se utilizara como la variable de entrada.
-- "stars": calificacion otorgada por el usuario. Esta columna se utilizó como base para construir la variable objetivo.
+- "text": es el comentario textual del usuario. Se utilizó como la variable de entrada.
+- "stars": calificacion otorgada por el usuario. Se utilizó como base para construir la variable objetivo.
 
 ## Problema planteado
-A partir del contenido de la reseña, el objetivo sera clasificar si la opinion es positiva o negativa.
+A partir del contenido de la reseña, el objetivo es clasificar si la opinión es positiva o negativa.
 
-Por ello se construyó la etiqueta:
-- 1 y 2 estrellas se consideran reseñas negativas (0)
-- 4 y 5 estrellas se consideran reseñas positivas (1)
-- No se tomaron en cuenta 0 y 3 estrellas por representar casos ambiguos o no informativos.
-- Se manejo de esta manera para evitar casos ambiguos como comentarios de tipo "It was okey, no great" o "Pretty decent recipe"
+Para ello se construyó la etiqueta:
+- **1 y 2 estrellas** se consideran reseñas negativas (`0`)
+- **4 y 5 estrellas** se consideran reseñas positivas (`1`)
+
+No se tomaron en cuenta las reseñas con **0 y 3 estrellas**:
+- `0` se consideró no informativo
+- `3` se consideró una valoración neutral o ambigua
+
+Esto se hizo para evitar casos ambiguos, por ejemplo comentarios como *“It was okay, not great”* o *“Pretty decent recipe”*.
 
 ## Preprocesamiento realizado
 1. Selección de columnas relevantes 
@@ -59,6 +64,13 @@ Después del preprocesamiento, el dataset fue dividido en dos subconjuntos:
 - **80% para entrenamiento**
 - **20% para prueba**
 
+## Desvalance de clases
+Al analizar la distribución de la variable objetivo, se observó un fuerte desbalance entre clases. Aproximadamente:
+- **96.72%** de las instancias corresponden a reseñas positivas
+- **3.28%** corresponden a reseñas negativas
+
+Esta característica tuvo un impacto importante en el entrenamiento y la evaluación del modelo, ya que una métrica como accuracy por sí sola podía dar una impresión engañosa del desempeño real.
+
 ## Archivos generados
 Como resultado de esta etapa se generaron los siguientes archivos:
 
@@ -67,18 +79,78 @@ Como resultado de esta etapa se generaron los siguientes archivos:
 - `test.csv`: conjunto de prueba
 - `preprocess.py`: código utilizado para el preprocesamiento
 
-## NOTAS IMPORTANTES
-Al analizar la distribución de la variable objetivo, se observó un fuerte desbalance entre clases. Aproximadamente el 96.72% de las instancias corresponden a reseñas positivas y solo el 3.28% a reseñas negativas. Esta característica deberá considerarse en etapas posteriores del modelado y evaluación.
+## Representación numérica del texto
+Para poder entrenar el modelo, el texto fue transformado a una representación numérica en varias etapas:
 
-## Siguiente paso
-En la siguiente etapa del proyecto se realizará la transformación del texto a representaciones numéricas adecuadas para el modelo, así como la implementación y entrenamiento de un modelo de clasificación utilizando un framework de aprendizaje profundo.
+1. tokenización del texto
+2. conversión a secuencias numéricas
+3. padding para igualar la longitud de las secuencias
 
-# Segundo avance - Implementar el modelo usando un framework seleccionado.
+Posteriormente se utilizó una capa **Embedding**, la cual aprende representaciones densas de las palabras durante el entrenamiento. Esto permitió que el modelo trabajara con una representación más útil del lenguaje.
 
-## Objetivo
-Desarrollar una primera implementación funcional de un modelo de clasificación de reseñas positivas y negativas, utilizando un framework de aprendizaje automático. En esta etapa se busca partir de los datos previamente preprocesados, convertir el texto a una representación numérica adecuada para el modelo y realizar un entrenamiento inicial que permita evaluar de manera preliminar su desempeño.
+## Modelo implementado
+Se implementó un modelo de clasificación binaria en **TensorFlow/Keras** con una arquitectura sencilla basada en:
+- capa `Embedding`
+- capa `GlobalAveragePooling1D`
+- capa `Dense` con activación ReLU
+- capa de salida `Dense(1)`
+
+La función de pérdida utilizada fue `binary_crossentropy` y el optimizador fue `adam`.
+
+## Manejo del desbalance
+Para reducir el efecto del desbalance de clases, se utilizó `class_weight`, calculado con `compute_class_weight` de scikit-learn.
+
+Esto permitió asignar mayor peso a la clase minoritaria durante el entrenamiento, de manera que los errores cometidos sobre esa clase tuvieran mayor penalización.
+
+## Experimentos y refinamiento
+Después de implementar el modelo base, se realizaron varias pruebas modificando:
+- número de épocas
+- dimensión del embedding
+- tamaño de la capa densa
+
+La configuración base fue:
+- **epochs = 5**
+- **embedding dim = 16**
+- **dense = 24**
+
+Sin embargo, durante las pruebas se observó que el entrenamiento presentaba variaciones entre ejecuciones, especialmente en el F1-score de la clase minoritaria.
+
+Por esta razón, no se seleccionó la configuración final únicamente a partir de una corrida aislada con un valor alto, sino a partir de **múltiples pruebas repetidas**. Además del valor máximo obtenido, también se consideró la **consistencia** de cada configuración.
+
+La configuración que mostró mejor comportamiento de forma más estable fue:
+- **epochs = 15**
+- **embedding dim = 24**
+- **dense = 24**
+
+Esta configuración fue la que con mayor frecuencia produjo valores de **F1-score para la clase 0 por encima de 0.50**, por lo que se consideró la mejor opción final.
 
 ## Resultados
-Se logró ejecutar correctamente el entrenamiento, evaluación y guardado del modelo. En la etapa inicial se obtuvo una accuracy de 96.72% sobre el conjunto de prueba. Sin embargo, al revisar el reporte de clasificación se observó que el modelo no predice adecuadamente la clase minoritaria, concentrando la mayoría de sus predicciones en la clase positiva. Esto indica que, aunque la implementación base ya es funcional, aún se requieren mejoras para manejar el desbalance de clases y obtener una evaluación más confiable.
+En la versión base, el modelo logró una accuracy alta, pero todavía presentaba dificultades importantes para clasificar correctamente la clase minoritaria.
 
-## Proximos pasos
+### Modelo base
+- **epochs = 5**
+- **embedding dim = 16**
+- **dense = 24**
+
+Resultados representativos:
+- **Accuracy:** 0.96
+- **F1-score clase 0:** 0.54
+- **Macro average F1:** 0.76
+
+### Modelo final seleccionado
+- **epochs = 15**
+- **embedding dim = 24**
+- **dense = 24**
+
+Resultados representativos:
+- **Accuracy:** 0.9681
+- **F1-score clase 0:** 0.58
+- **Macro average F1:** 0.78
+
+## Interpretación de resultados
+Los experimentos mostraron que:
+- el modelo clasifica muy bien la clase positiva
+- el principal reto es detectar correctamente la clase negativa, ya que es la minoritaria
+- la accuracy por sí sola no es suficiente para evaluar el desempeño
+- métricas como **precision, recall, F1-score y macro average** describen mejor el comportamiento real del modelo
+- el uso de embeddings y `class_weight` ayudó a mejorar el desempeño sobre la clase minoritaria
