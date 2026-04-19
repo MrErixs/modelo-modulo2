@@ -7,6 +7,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, GlobalAveragePooling1D, Dense
 from sklearn.metrics import classification_report, confusion_matrix
+from sklearn.utils.class_weight import compute_class_weight
 
 # Cargo los datos
 train_df = pd.read_csv("data/processed/train.csv")
@@ -24,7 +25,7 @@ y_test = test_df["label"].values
 
 vocab_size = 10000
 max_length = 100
-oov_token = "<OOV"
+oov_token = "<OOV>"
 
 tokenizer = Tokenizer(num_words=vocab_size, oov_token=oov_token)
 tokenizer.fit_on_texts(x_train_text)
@@ -32,6 +33,13 @@ tokenizer.fit_on_texts(x_train_text)
 # Convierto el texto en una secuencia numerica
 x_train_seq = tokenizer.texts_to_sequences(x_train_text)
 x_test_seq = tokenizer.texts_to_sequences(x_test_text)
+
+# Balanceo de informacion
+classes = np.unique(y_train)
+weights = compute_class_weight(class_weight="balanced", classes=classes, y=y_train)
+class_weight = dict(zip(classes, weights))
+
+print(class_weight)
 
 # Padding
 x_train_pad = pad_sequences(
@@ -70,6 +78,7 @@ history = model.fit(
     epochs=5,
     batch_size=32,
     validation_split=0.2,
+    class_weight=class_weight,
     verbose=1
 )
 
@@ -78,18 +87,14 @@ loss, accuracy = model.evaluate(x_test_pad, y_test, verbose=1)
 
 print("\nResultados en test:")
 print(f"Loss: {loss:.4f}")
-print(f"Accuract: {accuracy:.4}")
+print(f"Accuracy: {accuracy:.4}")
 
 # Ahora hago la prediccion
-y_pred_prob = model.predict(x_test_pad)
-y_pred = (y_pred_prob >= 0.5).astype(int).flatten()
+y_pred = (model.predict(x_test_pad) > 0.5).astype("int32")
 
-print("\nMatriz de confusion:")
 print(confusion_matrix(y_test, y_pred))
-
-print("\nReporte de clasificación:")
-print(classification_report(y_test, y_pred, digits=4))
+print(classification_report(y_test, y_pred))
 
 # Guardo modelo
-model.save("sentiment_model.keras")
-print("\nModelo guardado como sentiment_model.keras")
+model.save("sentiment_model_2.keras")
+print("\nModelo guardado como sentiment_model_2.keras")

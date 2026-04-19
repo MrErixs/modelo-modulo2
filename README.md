@@ -80,3 +80,5 @@ Desarrollar una primera implementación funcional de un modelo de clasificación
 
 ## Resultados
 Se logró ejecutar correctamente el entrenamiento, evaluación y guardado del modelo. En la etapa inicial se obtuvo una accuracy de 96.72% sobre el conjunto de prueba. Sin embargo, al revisar el reporte de clasificación se observó que el modelo no predice adecuadamente la clase minoritaria, concentrando la mayoría de sus predicciones en la clase positiva. Esto indica que, aunque la implementación base ya es funcional, aún se requieren mejoras para manejar el desbalance de clases y obtener una evaluación más confiable.
+
+## Proximos pasos
