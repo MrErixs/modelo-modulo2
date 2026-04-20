@@ -155,5 +155,11 @@ Los experimentos mostraron que:
 - métricas como **precision, recall, F1-score y macro average** describen mejor el comportamiento real del modelo
 - el uso de embeddings y `class_weight` ayudó a mejorar el desempeño sobre la clase minoritaria
 
-## PASOS SIGUIENTES
-Estoy tratando de hacer oversampling y seguir haciendo pruebas para ver si puedo mejorar el F1-Score de la clase de minoria
+## AVANCE (FALTA ACOMODAR ESTA PARTE)
+Segui entrenando con diferentes parametros. Despues de hacer oversampling e implementar un class_weight para que le de mas importancia a la clase que aparece menos (las reseñas negativas)
+
+Como resultado me dio el modelo version 4. 
+![alt text](<Model_4_results.png>)
+
+## Siguientes pasos
+Seguire modificando y entrenando para obtener un mejor desempeño para la clase menor.
