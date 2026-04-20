@@ -33,7 +33,7 @@ tokenizer.fit_on_texts(x_train_text)
 # Convierto el texto en una secuencia numerica
 x_train_seq = tokenizer.texts_to_sequences(x_train_text)
 x_test_seq = tokenizer.texts_to_sequences(x_test_text)
-
+'''
 # Balanceo de informacion
 classes = np.unique(y_train)
 weights = compute_class_weight(class_weight="balanced", classes=classes, y=y_train)
@@ -41,7 +41,7 @@ class_weight = dict(zip(classes, weights))
 
 # Pruebo que si esta funcionando la generacion de pesos
 print("GENERACION DE PESOS", class_weight)
-
+'''
 # Padding
 x_train_pad = pad_sequences(
     x_train_seq,
@@ -79,7 +79,7 @@ history = model.fit(
     epochs=15,
     batch_size=32,
     validation_split=0.2,
-    class_weight=class_weight,
+    ##class_weight=class_weight,
     verbose=1
 )
 
@@ -97,5 +97,5 @@ print(confusion_matrix(y_test, y_pred))
 print(classification_report(y_test, y_pred))
 
 # Guardo modelo
-model.save("sentiment_model_3.keras")
-print("\nModelo guardado como sentiment_model_3.keras")
+model.save("sentiment_model_4.keras")
+print("\nModelo guardado como sentiment_model_4.keras")

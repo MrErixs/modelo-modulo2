@@ -1,5 +1,6 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
+from sklearn.utils import resample
 # html para convertir entidades html a caracteres normales
 import html
 # re para limpiar patrones
@@ -43,17 +44,44 @@ train_df, test_df = train_test_split(
     stratify=df["label"]
 )
 
+# Hago oversampling, PERO solo en train
+train_majority = train_df[train_df["label"] == 1]
+train_minority = train_df[train_df["label"] == 0]
+
+# Aumento la clase menor para igualarla un poco a la de mayor cantidad
+# Aumento al 20% la minoria, si la aumento al 50/50 con la mayoria, me ariesgo a que el modelo haga memorizacion
+target_ratio = 0.20
+minority_target_size = int((target_ratio / (1 - target_ratio)) * len(train_majority))
+
+train_minority_upsampled = resample(
+    train_minority,
+    replace=True,
+    n_samples=minority_target_size,
+    random_state=42
+)
+
+train_df_balance = pd.concat([train_majority, train_minority_upsampled])
+
+# Mezclo las filas para que no queden pegadas
+train_df_balance = train_df_balance.sample(frac=1, random_state=42).reset_index(drop=True)
+
 # Guardo los archivos pre procesados
 df.to_csv("data/processed/reviews_binary_clean.csv", index = False)
-train_df.to_csv("data/processed/train.csv", index = False)
+train_df_balance.to_csv("data/processed/train.csv", index = False)
 test_df.to_csv("data/processed/test.csv", index = False)
 
-# Revision de conteos, para saber la cantidad de cuantos comentarios tienen x estrellas
+# Revision
 print("Conteo de stars:")
 print(df["stars"].value_counts())
 
-print("\nConteo de label:")
+print("\nConteo de label total:")
 print(df["label"].value_counts())
 
-print("\nProporción de label:")
-print(df["label"].value_counts(normalize=True))
+print("\nConteo de label en train original:")
+print(train_df["label"].value_counts())
+
+print("\nConteo de label en train balanceado:")
+print(train_df_balance["label"].value_counts())
+
+print("\nConteo de label en test:")
+print(test_df["label"].value_counts())

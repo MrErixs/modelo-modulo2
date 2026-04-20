@@ -154,3 +154,6 @@ Los experimentos mostraron que:
 - la accuracy por sí sola no es suficiente para evaluar el desempeño
 - métricas como **precision, recall, F1-score y macro average** describen mejor el comportamiento real del modelo
 - el uso de embeddings y `class_weight` ayudó a mejorar el desempeño sobre la clase minoritaria
+
+## PASOS SIGUIENTES
+Estoy tratando de hacer oversampling y seguir haciendo pruebas para ver si puedo mejorar el F1-Score de la clase de minoria
