@@ -163,3 +163,4 @@ Como resultado me dio el modelo version 4.
 
 ## Siguientes pasos
 Seguire modificando y entrenando para obtener un mejor desempeño para la clase menor.
+Estoy considerando si hacer data augmentatio textual.
