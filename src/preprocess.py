@@ -1,10 +1,8 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.utils import resample
-# html para convertir entidades html a caracteres normales
-import html
-# re para limpiar patrones
-import re
+
+from utils_text import clean_reviews_dataframe
 
 #  Cargo el dataset
 df = pd.read_csv("data/raw/Recipe Reviews and User Feedback Dataset.csv")
@@ -21,20 +19,8 @@ df = df[df["stars"].isin([1, 2, 4, 5])].copy()
 # Creo la etiqueta
 df["label"] = df["stars"].apply(lambda x: 0 if x in [1, 2] else 1)
 
-# Limpio el texto
-def clean_text(text):
-    text = str(text)
-    text = html.unescape(text) # convierte los "&#39;" a "'"
-    text = text.lower()
-    text = re.sub(r"\s+", " ", text)
-    text = text.strip()
-    return text
-
-df["text"] = df["text"].apply(clean_text)
-
-# Elimino el texto vacio y a los duplicados
-df = df[df["text"].str.len() > 0]
-df = df.drop_duplicates(subset = ["text", "label"])
+# Normalizo y limpio el text
+df = clean_reviews_dataframe(df)
 
 # Separo train y test
 train_df, test_df = train_test_split(
@@ -67,7 +53,10 @@ train_df_balance = train_df_balance.sample(frac=1, random_state=42).reset_index(
 
 # Guardo los archivos pre procesados
 df.to_csv("data/processed/reviews_binary_clean.csv", index = False)
-train_df_balance.to_csv("data/processed/train.csv", index = False)
+# df con el oversampling
+train_df_balance.to_csv("data/processed/train_oversampling.csv", index = False)
+# df sin el oversampling
+train_df.to_csv("data/processed/train_normal.csv", index = False)
 test_df.to_csv("data/processed/test.csv", index = False)
 
 # Revision

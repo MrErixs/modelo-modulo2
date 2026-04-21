@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
 import tensorflow as tf
+import matplotlib.pyplot as plt
+import seaborn as sns
+import joblib
 
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
@@ -10,7 +13,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.utils.class_weight import compute_class_weight
 
 # Cargo los datos
-train_df = pd.read_csv("data/processed/train.csv")
+train_df = pd.read_csv("data/processed/train_augmented.csv")
 test_df = pd.read_csv("data/processed/test.csv")
 
 # Tomo el texto y las etiquetas
@@ -76,7 +79,7 @@ model.compile(
 history = model.fit(
     x_train_pad,
     y_train,
-    epochs=25,
+    epochs=15,
     batch_size=32,
     validation_split=0.2,
     class_weight=class_weight,
@@ -90,12 +93,34 @@ print("\nResultados en test:")
 print(f"Loss: {loss:.4f}")
 print(f"Accuracy: {accuracy:.4}")
 
-# Ahora hago la prediccion
-y_pred = (model.predict(x_test_pad) > 0.50).astype("int32").flatten()
+# Ahora hago la prediccion (umbral de decision)
+y_pred = (model.predict(x_test_pad) > 0.5).astype("int32").flatten()
 
-print(confusion_matrix(y_test, y_pred))
+# Matriz de confusion
+cm = confusion_matrix(y_test, y_pred)
+print(cm)
 print(classification_report(y_test, y_pred))
+# Grafico la matriz de confisión
+plt.figure(figsize=(6,5))
+sns.heatmap(
+    cm,
+    annot=True,
+    fmt="d",
+    cmap="Blues",
+    xticklabels=["Negativo", "Positivo"],
+    yticklabels=["Negativo", "Positivo"]
+)
+plt.title("Matriz de confusión")
+plt.xlabel("Predicted label")
+plt.ylabel("True label")
+plt.tight_layout()
+plt.show()
 
 # Guardo modelo
-model.save("sentiment_model_5.keras")
-print("\nModelo guardado como sentiment_model_5.keras")
+model.save("./models/sentiment_model_6.keras")
+joblib.dump(tokenizer, "./models/tokenizer_6.pkl")
+joblib.dump(max_length, "./models/max_length_6.pkl")
+
+print("\nModelo guardado como models/sentiment_model_6.keras")
+print("Tokenizer guardado como models/tokenizer_6.pkl")
+print("Max length guardado como models/max_length_6.pkl")
