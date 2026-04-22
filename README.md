@@ -89,31 +89,29 @@ Esta arquitectura fue elegida por su simplicidad, bajo costo computacional y bue
 ## Manejo del desbalance
 Debido al desbalance del dataset, se exploraron varias estrategias para mejorar el desempeño sobre la clase minoritaria:
 
-### 1. Ajuste de hiperparámetros
-Primero se probaron distintas configuraciones de:
-- número de épocas: Al entrenar más iteraciones, el modelo pudo ajustar mejor sus pesos y capturar relaciones más útiles entre palabras.
-- dimensión del embedding: La incrementación del embedding permite representar mejor el significado de las palabras.
-- tamaño de la capa densa: Capacidad para combinar caracteristicas aprendidas por el embedding.
-
-La configuración inicial (epochs = 5, embedding_dim = 16, dense = 24) se tomó como un punto de partida sencillo para probar que el modelo aprendiera sin volverlo innecesariamente grande. Después de las corridas de entrenamiento, se observó que una configuración más estable era epochs = 15, embedding_dim = 24 y dense = 24, por lo que se ajustaron los hiperparámetros buscando un mejor equilibrio entre aprendizaje y generalización.
-
-
-### 2. Uso de class_weight
+### 1. Uso de class_weight
 Se utilizó class_weight de scikit-learn para asignar mayor peso a la clase minoritaria durante el entrenamiento. Esto permitió penalizar más los errores cometidos sobre las reseñas negativas.
 
-### 3. Oversampling
+### 2. Oversampling
 También se aplicó oversampling sobre la clase minoritaria, pero de forma controlada. En lugar de duplicar agresivamente todos los ejemplos negativos (50/50), se decidió incrementar únicamente una parte de las reseñas reales de la clase minoritaria, evitando exagerar el balance artificial del conjunto de entrenamiento.
 
 En esta etapa se aplicó un aumento aproximado del 20% sobre las reseñas negativas reales del conjunto de entrenamiento. Esto implica que, antes del oversampling, había aproximadamente 2504 reseñas negativas reales, y después del proceso se llegó a 3005 reseñas negativas reales, es decir, se añadieron cerca de 501 ejemplos duplicados.
 
 Este ajuste se realizó sin modificar el conjunto de prueba, ya que la evaluación debe hacerse con datos no alterados para obtener una medición más honesta del desempeño del modelo. Mantener separado el test es importante para evitar sesgos en la evaluación y conservar una estimación más realista del comportamiento del modelo ante datos no vistos.
 
-### 4. Data augmentation textual
+### 3. Data augmentation textual
 Finalmente, se incorporó data augmentation textual para generar ejemplos sintéticos adicionales de la clase minoritaria. La literatura describe el data augmentation como una estrategia para construir datos sintéticos a partir del conjunto disponible, con el fin de mejorar la generalización, reforzar la robustez del modelo y ayudar a enfrentar problemas como el class imbalance. También se señala que es una técnica útil para reducir el overfitting, ya que introduce variaciones sobre ejemplos existentes en lugar de depender únicamente de repeticiones exactas.
 
 En este proyecto, se generaron 499 reseñas negativas sintéticas adicionales (pasando de 3005 reseñas negativas a 3504) con apoyo de una LLM de ChatGPT. Estas reseñas se usaron únicamente en entrenamiento como una forma de ampliar la variedad lingüística de la clase minoritaria, añadiendo nuevas formas de expresar opiniones negativas.
 
 La combinación de oversampling + class_weight + data augmentation produjo la mejor versión del modelo. Sin embargo, estas técnicas no deben exagerarse al mismo tiempo. Si se incrementa demasiado el oversampling y además se agregan muchos datos sintéticos, el modelo puede terminar aprendiendo una distribución artificial de la clase minoritaria, sobreexponiéndose a ejemplos repetidos o demasiado parecidos entre sí. En otras palabras, usar ambas técnicas en exceso puede mejorar artificialmente el entrenamiento, pero perjudicar la capacidad de generalización sobre datos reales no vistos. La literatura sobre data augmentation también enfatiza que estas transformaciones deben ayudar a conservar la información útil y mejorar la generalización, no introducir ruido o dependencia excesiva de ejemplos artificiales.
+
+### Ajuste de hiperparámetros
+- número de épocas: Al entrenar más iteraciones, el modelo pudo ajustar mejor sus pesos y capturar relaciones más útiles entre palabras.
+- dimensión del embedding: La incrementación del embedding permite representar mejor el significado de las palabras.
+- tamaño de la capa densa: Capacidad para combinar caracteristicas aprendidas por el embedding.
+
+La configuración inicial (epochs = 5, embedding_dim = 16, dense = 24) se tomó como un punto de partida sencillo para probar que el modelo aprendiera sin volverlo innecesariamente grande. Después de las corridas de entrenamiento, se observó que una configuración más estable era epochs = 15, embedding_dim = 24 y dense = 24, por lo que se ajustaron los hiperparámetros buscando un mejor equilibrio entre aprendizaje y generalización.
 
 ## Resultados
 ### Versión base
