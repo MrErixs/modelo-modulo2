@@ -91,19 +91,12 @@ Debido al desbalance del dataset, se exploraron varias estrategias para mejorar 
 
 ### 1. Ajuste de hiperparámetros
 Primero se probaron distintas configuraciones de:
-- número de épocas
-- dimensión del embedding
-- tamaño de la capa densa
+- número de épocas: Al entrenar más iteraciones, el modelo pudo ajustar mejor sus pesos y capturar relaciones más útiles entre palabras.
+- dimensión del embedding: La incrementación del embedding permite representar mejor el significado de las palabras.
+- tamaño de la capa densa: Capacidad para combinar caracteristicas aprendidas por el embedding.
 
-La configuración base fue:
-- epochs = 5
-- embedding_dim = 16
-- dense = 24
+La configuración inicial (epochs = 5, embedding_dim = 16, dense = 24) se tomó como un punto de partida sencillo para probar que el modelo aprendiera sin volverlo innecesariamente grande. Después de las corridas de entrenamiento, se observó que una configuración más estable era epochs = 15, embedding_dim = 24 y dense = 24, por lo que se ajustaron los hiperparámetros buscando un mejor equilibrio entre aprendizaje y generalización.
 
-Posteriormente se observó que una configuración más estable era:
-- epochs = 15
-- embedding_dim = 24
-- dense = 24
 
 ### 2. Uso de class_weight
 Se utilizó class_weight de scikit-learn para asignar mayor peso a la clase minoritaria durante el entrenamiento. Esto permitió penalizar más los errores cometidos sobre las reseñas negativas.
