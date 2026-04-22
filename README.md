@@ -147,11 +147,19 @@ Se obtuvieron resultados representativos de:
 ### Mejor modelo actual
 Con la combinación de oversampling + class_weight + data augmentation, el mejor resultado reportado fue:
 
-![alt text](<Captura de pantalla 2026-04-21 170953.png>)
+<p align="center">
+  <img src="Resultados_Modelo_6.png" alt="1. Resultados de evaluación del modelo" width="500" />
+  <br>
+  <em>Figura 1. Métricas de evaluación del mejor modelo en el conjunto de prueba.</em>
+</p>
 
-Matriz de confusión:
+Matriz de confusión SVM:
 
-![alt text](MODELO6_AUG_OVER_WEITH.png)
+<p align="center">
+  <img src="MODELO6_AUG_OVER_WEITH.png" alt="Matriz de confusión SVM" width="500" />
+  <br>
+  <em>Figura 2. Matriz de confusión SVM del mejor modelo de clasificación de reseñas de recetas.</em>
+</p>
 
 ## Interpretación de resultados
 Los resultados muestran que el modelo clasifica muy bien la clase positiva, pero el verdadero reto sigue siendo la clase negativa, ya que cuenta con mucho menos ejemplos. Por esta razón, la accuracy no se tomó como único criterio de selección. En su lugar, se dio mayor importancia al comportamiento de la clase 0 mediante precision, recall y F1-score, así como al macro average, que da un panorama más equilibrado del desempeño.
