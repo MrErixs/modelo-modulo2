@@ -44,25 +44,18 @@ Esta decisión buscó reducir la ambigüedad en el conjunto de datos y facilitar
 ## Preprocesamiento realizado
 El preprocesamiento consistió en las siguientes etapas:
 
-1. Selección de columnas relevantes
-   Se conservaron únicamente text y stars.
-2. Eliminación de valores nulos
-   Se descartaron registros con texto vacío o sin calificación válida.
-3. Filtrado de clases
-   Se eliminaron las reseñas con stars = 0 y stars = 3.
-4. Construcción de la variable objetivo
-   Se generó la columna label:
+1. Selección de columnas relevantes. Se conservaron únicamente text y stars.
+2. Eliminación de valores nulos. Se descartaron registros con texto vacío o sin calificación válida.
+3. Filtrado de clases. Se eliminaron las reseñas con stars = 0 y stars = 3.
+4. Construcción de la variable objetivo. Se generó la columna label:
    - 0 = negativo
    - 1 = positivo
-5. Limpieza básica del texto
-   Se aplicaron transformaciones como:
+5. Limpieza básica del texto. Se aplicaron transformaciones como:
    - conversión a minúsculas
    - corrección de entidades HTML
    - normalización de espacios en blanco
-6. Eliminación de duplicados
-   Se eliminaron registros repetidos para reducir ruido.
-7. Separación de datos
-   El dataset limpio se dividió en:
+6. Eliminación de duplicados. Se eliminaron registros repetidos para reducir ruido.
+7. Separación de datos. El dataset limpio se dividió en:
    - 80% entrenamiento
    - 20% prueba
 
