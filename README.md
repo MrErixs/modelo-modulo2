@@ -18,26 +18,26 @@ Desarrollar un modelo de clasificación binaria de texto capaz de identificar si
 ## Dataset seleccionado
 Se utilizó el dataset Recipe Reviews and User Feedback, el cual contiene comentarios textuales de usuarios sobre recetas, junto con información adicional como número de estrellas, votos y reputación del usuario. En este proyecto se utilizaron únicamente las columnas:
 
-text: comentario textual del usuario
-stars: calificación otorgada por el usuario
+- text: comentario textual del usuario
+- stars: calificación otorgada por el usuario
 
 Este dataset fue elegido porque:
 
-permite formular un problema de clasificación supervisada
-contiene una cantidad adecuada de instancias
-requiere una etapa real de limpieza y preparación de datos
-presenta un caso realista de desbalance de clases
+- permite formular un problema de clasificación supervisada
+- contiene una cantidad adecuada de instancias
+- requiere una etapa real de limpieza y preparación de datos
+- presenta un caso realista de desbalance de clases
 
 ## Planteamiento del problema
 A partir del contenido textual de cada reseña, se construyó una etiqueta binaria:
 
-1 y 2 estrellas → reseña negativa (0)
-4 y 5 estrellas → reseña positiva (1)
+- 1 y 2 estrellas → reseña negativa (0)
+- 4 y 5 estrellas → reseña positiva (1)
 
 No se consideraron las reseñas con:
 
-0 estrellas, por ser no informativas
-3 estrellas, por representar opiniones neutras o ambiguas
+- 0 estrellas, por ser no informativas
+- 3 estrellas, por representar opiniones neutras o ambiguas
 
 Esta decisión buscó reducir la ambigüedad en el conjunto de datos y facilitar una separación más clara entre ambas clases, como ya habías planteado en tu README original.
 
