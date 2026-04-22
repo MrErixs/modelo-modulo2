@@ -134,6 +134,7 @@ Con la configuración:
 - epochs = 5
 - embedding_dim = 16
 - dense = 24
+
 Resultados representativos de una versión inicial del modelo:
 - Accuracy: 0.96
 - F1-score clase 0: 0.54
@@ -144,6 +145,7 @@ Con la configuración:
 - epochs = 15
 - embedding_dim = 24
 - dense = 24
+
 Se obtuvieron resultados representativos de:
 - Accuracy: 0.9681
 - F1-score clase 0: 0.58
@@ -162,3 +164,14 @@ Matriz de confusión:
 Los resultados muestran que el modelo clasifica muy bien la clase positiva, pero el verdadero reto sigue siendo la clase negativa, ya que cuenta con mucho menos ejemplos. Por esta razón, la accuracy no se tomó como único criterio de selección. En su lugar, se dio mayor importancia al comportamiento de la clase 0 mediante precision, recall y F1-score, así como al macro average, que da un panorama más equilibrado del desempeño.
 
 La mejor versión del modelo logró elevar el F1-score de la clase negativa hasta 0.63, lo cual representa una mejora respecto a configuraciones anteriores. Aunque todavía existe espacio de mejora, el modelo ya presenta un comportamiento más equilibrado y útil que una solución que solo optimiza accuracy. Esta decisión también está justificada por los lineamientos del curso, que piden elegir métricas acordes al problema y reportar resultados de forma interpretada, no solo numérica.
+
+## Conclusiones
+Se desarrolló un modelo de clasificación binaria para reseñas de recetas utilizando TensorFlow/Keras. El principal reto fue el fuerte desbalance de clases, lo que hizo necesario ir más allá de una evaluación basada solo en accuracy. A través de varias etapas de refinamiento, incluyendo ajuste de hiperparámetros, class_weight, oversampling y data augmentation textual, se consiguió mejorar el desempeño sobre la clase minoritaria.
+
+La mejor versión del modelo alcanzó una accuracy alta y, más importante aún, un mejor equilibrio entre clases, con un F1-score de 0.63 para la clase negativa. Esto muestra que incluso una arquitectura sencilla puede producir resultados útiles si se acompaña de un buen preprocesamiento, una evaluación adecuada y técnicas específicas para enfrentar el desbalance.
+
+## Referencias
+- Jiang, X. (2025). Exploring the Impact of Key Factors on the Accuracy of a Keras Machine Learning Model for Text Classification. In Proceedings of the 1st International Conference on Modern Logistics and Supply Chain Management (MLSCM 2024) (pp. 368–371). DOI: 10.5220/0013331400004558.
+- Shorten, C., Khoshgoftaar, T. M., & Furht, B. (2021). Text Data Augmentation for Deep Learning. Journal of Big Data, 8, 101. https://doi.org/10.1186/s40537-021-00492-0
+- Bhowmik, N. R., Arifuzzaman, M., & Mondal, M. R. H. (2022). Sentiment analysis on Bangla text using extended lexicon dictionary and deep learning algorithms. Array, 13, 100123. https://doi.org/10.1016/j.array.2021.100123
+- Valdés Aguirre, B. (s. f.). Módulo 2 - Inteligencia Artificial TC3002B. Google Docs. https://docs.google.com/document/d/1ERemFngFGI1c8jkfclAn1xF4qXQZTpoKlBF07i0EsG0/edit?tab=t.0
