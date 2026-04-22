@@ -121,9 +121,12 @@ Con la configuración:
 - dense = 24
 
 Resultados representativos de una versión inicial del modelo:
-- Accuracy: 0.96
-- F1-score clase 0: 0.54
-- Macro average F1: 0.76
+
+<p align="center">
+  <img src="MODELO_INIT.png" alt="1. Resultados de evaluación del modelo inicial" width="500" />
+  <br>
+  <em>Figura 1. Métricas de evaluación del modelo inicial en el conjunto de prueba.</em>
+</p>
 
 ### Configuración refinada
 Con la configuración:
@@ -142,7 +145,7 @@ Con la combinación de oversampling + class_weight + data augmentation, el mejor
 <p align="center">
   <img src="Resultados_Modelo_6.png" alt="1. Resultados de evaluación del modelo" width="500" />
   <br>
-  <em>Figura 1. Métricas de evaluación del mejor modelo en el conjunto de prueba.</em>
+  <em>Figura 2. Métricas de evaluación del mejor modelo en el conjunto de prueba.</em>
 </p>
 
 Matriz de confusión SVM:
@@ -150,7 +153,7 @@ Matriz de confusión SVM:
 <p align="center">
   <img src="MODELO6_AUG_OVER_WEITH.png" alt="Matriz de confusión SVM" width="500" />
   <br>
-  <em>Figura 2. Matriz de confusión SVM del mejor modelo de clasificación de reseñas de recetas.</em>
+  <em>Figura 3. Matriz de confusión SVM del mejor modelo de clasificación de reseñas de recetas.</em>
 </p>
 
 ## Interpretación de resultados
